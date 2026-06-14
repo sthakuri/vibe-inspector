@@ -1,0 +1,187 @@
+{
+  "name": "vibe-inspector",
+  "displayName": "Vibe Inspector",
+  "description": "Bidirectional guardrails for AI-assisted (vibe) coding — validates prompts before generation and inspects results after.",
+  "version": "0.1.0",
+  "publisher": "vibe-inspector",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other", "Linters", "AI"],
+  "keywords": ["ai", "vibe coding", "guardrails", "security", "technical debt", "copilot"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "icon": "media/icon.png",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vibeInspector.inspectPrompt",
+        "title": "Vibe Inspector: Inspect Prompt Before Generation",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "vibeInspector.inspectCode",
+        "title": "Vibe Inspector: Inspect Generated Code",
+        "icon": "$(search)"
+      },
+      {
+        "command": "vibeInspector.openDashboard",
+        "title": "Vibe Inspector: Open Dashboard",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "vibeInspector.initProjectContext",
+        "title": "Vibe Inspector: Initialize Project Context Store",
+        "icon": "$(database)"
+      },
+      {
+        "command": "vibeInspector.editProjectContext",
+        "title": "Vibe Inspector: Edit Project Context Store",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "vibeInspector.clearSession",
+        "title": "Vibe Inspector: Clear Session History",
+        "icon": "$(trash)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vibeInspector.inspectPrompt",
+        "key": "ctrl+shift+v p",
+        "mac": "cmd+shift+v p"
+      },
+      {
+        "command": "vibeInspector.inspectCode",
+        "key": "ctrl+shift+v c",
+        "mac": "cmd+shift+v c"
+      },
+      {
+        "command": "vibeInspector.openDashboard",
+        "key": "ctrl+shift+v d",
+        "mac": "cmd+shift+v d"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "vibeInspector.inspectPrompt",
+          "group": "vibeInspector@1",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "vibeInspector.inspectCode",
+          "group": "vibeInspector@2",
+          "when": "editorHasSelection"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "vibeInspector.openDashboard",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vibeInspector",
+          "title": "Vibe Inspector",
+          "icon": "media/shield.svg"
+        }
+      ]
+    },
+    "views": {
+      "vibeInspector": [
+        {
+          "id": "vibeInspector.sessionView",
+          "name": "Inspection Session",
+          "type": "tree"
+        },
+        {
+          "id": "vibeInspector.contextView",
+          "name": "Project Context Store",
+          "type": "tree"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Vibe Inspector",
+      "properties": {
+        "vibeInspector.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API key for AI-powered analysis (leave blank to use static analysis only)",
+          "markdownDescription": "Anthropic API key. Get one at https://console.anthropic.com. If not set, only static analysis will run."
+        },
+        "vibeInspector.preGeneration.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable pre-generation prompt inspection"
+        },
+        "vibeInspector.preGeneration.blockOnHighRisk": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show blocking warning dialog for high-risk prompts"
+        },
+        "vibeInspector.postGeneration.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable post-generation code inspection"
+        },
+        "vibeInspector.postGeneration.securityScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run CWE-based security pattern scan on generated code"
+        },
+        "vibeInspector.postGeneration.debtScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run technical debt heuristic scan on generated code"
+        },
+        "vibeInspector.postGeneration.contextDrift": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect architectural drift from Project Context Store"
+        },
+        "vibeInspector.severity.minDisplay": {
+          "type": "string",
+          "enum": ["info", "warning", "error"],
+          "default": "info",
+          "description": "Minimum severity level to display in findings"
+        },
+        "vibeInspector.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline diagnostics (squiggles) for code findings"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "vibecontext",
+        "aliases": ["Vibe Context", "vibecontext"],
+        "extensions": [".vibecontext"],
+        "mimetypes": ["application/json"]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
