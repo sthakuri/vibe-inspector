@@ -4,6 +4,10 @@
   "description": "Bidirectional guardrails for AI-assisted (vibe) coding — validates prompts before generation and inspects results after.",
   "version": "0.1.0",
   "publisher": "vibe-inspector",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sthakuri/vibe-inspector.git"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
