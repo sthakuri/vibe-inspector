@@ -5,6 +5,7 @@ import { DiagnosticsProvider } from './providers/DiagnosticsProvider';
 import { SessionTreeProvider, ContextTreeProvider } from './providers/TreeProviders';
 import { AIAnalyzer, analyzePromptWithAI, analyzeCodeWithAI } from './analysis/aiAnalyzer';
 import { buildDashboardHtml } from './ui/DashboardPanel';
+import { ClaudeSessionMonitor } from './transcript/ClaudeSessionMonitor';
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
@@ -75,6 +76,30 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   statusBar.command = 'vibeInspector.openDashboard';
   statusBar.show();
   context.subscriptions.push(statusBar);
+
+  // Chat inspection toggle (Claude Code transcript monitor)
+  const chatStatusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 99);
+  context.subscriptions.push(chatStatusBar);
+
+  const chatMonitorOutput = vscode.window.createOutputChannel('Vibe Inspector: Chat Monitor');
+  context.subscriptions.push(chatMonitorOutput);
+
+  const chatMonitor = new ClaudeSessionMonitor(
+    context,
+    contextManager,
+    sessionManager,
+    aiAnalyzer,
+    chatStatusBar,
+    () => refreshDashboard(sessionManager, context),
+    chatMonitorOutput
+  );
+  context.subscriptions.push(chatMonitor.register(), chatMonitor);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('vibeInspector.toggleChatInspection', () => {
+      chatMonitor.toggle();
+    })
+  );
 
   // ── Commands ────────────────────────────────────────────────────────────────
 

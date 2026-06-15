@@ -47,6 +47,11 @@
         "command": "vibeInspector.clearSession",
         "title": "Vibe Inspector: Clear Session History",
         "icon": "$(trash)"
+      },
+      {
+        "command": "vibeInspector.toggleChatInspection",
+        "title": "Vibe Inspector: Toggle Chat Inspection",
+        "icon": "$(comment-discussion)"
       }
     ],
     "keybindings": [

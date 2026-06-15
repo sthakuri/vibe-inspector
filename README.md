@@ -38,6 +38,17 @@ Or via the UI: Command Palette (`Ctrl+Shift+P`) > `Extensions: Install from VSIX
 
 Not yet published.
 
+## Getting Started
+
+1. **Install the extension** (see [Installation](#installation)) and open your project's folder in VS Code.
+2. Confirm it's active — a `$(shield) Vibe Inspector` item appears in the status bar (bottom right). Click it any time to open the Dashboard.
+3. **(Optional) Initialize a Project Context Store** via `Vibe Inspector: Initialize Project Context Store` from the Command Palette (`Ctrl+Shift+P`). This describes your architecture, security rules, and scope so inspections can flag drift and out-of-scope changes. Edit it later with `Vibe Inspector: Edit Project Context Store`.
+4. **(Optional) Add an Anthropic API key** under `Extensions > Vibe Inspector > Api Key` in VS Code Settings to enable AI-enhanced analysis. Without a key, only static analysis runs.
+5. **Inspect a prompt before sending it to your AI assistant**: select or type your prompt and run `Vibe Inspector: Inspect Prompt Before Generation` (`Ctrl+Shift+V P`).
+6. **Inspect AI-generated code after it lands**: select the new code (or open the file) and run `Vibe Inspector: Inspect Generated Code` (`Ctrl+Shift+V C`).
+7. **Using Claude Code?** Click the `$(comment-discussion) VI Chat: Off` status bar item (or run `Vibe Inspector: Toggle Chat Inspection`) to turn it on — every chat prompt and generated-code change is then inspected automatically (see [Chat Inspection (Claude Code)](#chat-inspection-claude-code)).
+8. Open `Vibe Inspector: Open Dashboard` (`Ctrl+Shift+V D`) to review scores, findings, and history, or check the **Vibe Inspector** activity bar icon for the session/context tree views.
+
 ## Project Context Store
 
 A JSON file at `.vibe-inspector/context.json` describing your project's architecture, security rules, conventions, and scope boundaries. Context-aware checks (forbidden libraries/patterns, out-of-scope topics, critical files, sensitive fields, custom rules) all read from this file.
@@ -53,6 +64,23 @@ Create it with `Vibe Inspector: Initialize Project Context Store` from the Comma
 | Open dashboard | `Ctrl+Shift+V D` | `Vibe Inspector: Open Dashboard` |
 
 Select text and run the prompt/code commands to inspect just that selection, or run with nothing selected to inspect interactively (prompt) or the whole file (code). Both commands are also available via right-click when text is selected.
+
+## Chat Inspection (Claude Code)
+
+A status bar toggle (`$(comment-discussion) VI Chat: On` / `Off`, command `Vibe Inspector: Toggle Chat Inspection`) controls automatic inspection of your Claude Code chat sessions for the current workspace.
+
+When **on**, Vibe Inspector tails Claude Code's on-disk session transcripts (`~/.claude/projects/<sanitized-workspace-path>/*.jsonl`) and reacts to new turns as they're written:
+
+- **Pre-generation**: each new user message you send to Claude Code is run through the same prompt risk analysis as `Inspect Prompt Before Generation`, with the risk score shown in a notification.
+- **Post-generation**: each file Claude Code writes or edits (`Write`/`Edit`/`MultiEdit` tool calls) is run through the same code analysis as `Inspect Generated Code`, with the quality score shown in a notification.
+
+Both results are added to the session history and visible in the Dashboard.
+
+**Notes**:
+- Only the first workspace folder is monitored in multi-root workspaces.
+- History from before you enabled the toggle isn't replayed — only new chat turns are inspected.
+- Sub-agent ("sidechain") turns are skipped.
+- A turn with several file edits produces several post-generation notifications.
 
 ## Configuration
 
