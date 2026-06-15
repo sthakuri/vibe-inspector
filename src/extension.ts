@@ -5,7 +5,7 @@ import { DiagnosticsProvider } from './providers/DiagnosticsProvider';
 import { SessionTreeProvider, ContextTreeProvider } from './providers/TreeProviders';
 import { AIAnalyzer, analyzePromptWithAI, analyzeCodeWithAI } from './analysis/aiAnalyzer';
 import { buildDashboardHtml } from './ui/DashboardPanel';
-import { ClaudeSessionMonitor } from './transcript/ClaudeSessionMonitor';
+import { AgentSessionMonitor } from './transcript/AgentSessionMonitor';
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const chatMonitorOutput = vscode.window.createOutputChannel('Vibe Inspector: Chat Monitor');
   context.subscriptions.push(chatMonitorOutput);
 
-  const chatMonitor = new ClaudeSessionMonitor(
+  const chatMonitor = new AgentSessionMonitor(
     context,
     contextManager,
     sessionManager,

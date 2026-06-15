@@ -2,7 +2,7 @@
   "name": "vibe-inspector",
   "displayName": "Vibe Inspector",
   "description": "Bidirectional guardrails for AI-assisted (vibe) coding — validates prompts before generation and inspects results after.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "vibe-inspector",
   "repository": {
     "type": "git",
