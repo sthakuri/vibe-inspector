@@ -27,7 +27,7 @@ interface CodeChange {
 }
 
 function sanitizeWorkspacePath(workspacePath: string): string {
-  return workspacePath.replace(/[\\/:]/g, '-');
+  return workspacePath.replace(/[^a-zA-Z0-9]/g, '-');
 }
 
 /**
